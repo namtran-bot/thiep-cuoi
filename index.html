@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thiệp Cưới: Duy Nam & Mai Tâm | Wedding Invitation</title>
+  
+  <!-- SEO & Social Open Graph Tags (Khi gửi qua Zalo, Facebook, Messenger) -->
+  <meta name="description" content="Trân trọng kính mời quý khách đến dự tiệc cưới của Duy Nam & Mai Tâm. Sự hiện diện của bạn là niềm vinh dự của gia đình chúng tôi!">
+  <meta property="og:title" content="Thiệp Cưới Online: Duy Nam & Mai Tâm">
+  <meta property="og:description" content="Trân trọng kính mời quý khách đến dự tiệc cưới chung vui cùng gia đình chúng mình!">
+  <meta property="og:image" content="images/co-dau.jpg">
+  <meta property="og:type" content="website">
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💍</text></svg>">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            rosewood: '#d9777f',
+            'rosewood-dark': '#b85d65',
+            'rosewood-light': '#fbeee8',
+            champagne: '#c5a059',
+            'champagne-light': '#f8f4ea',
+            sage: '#7d8f78',
+            ivory: '#fdfbf7',
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Canvas Confetti CDN (cho hiệu ứng khi gửi lời chúc) -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-wedding-pattern text-stone-800 antialiased selection:bg-rosewood-light selection:text-rosewood-dark relative pb-20 md:pb-10">
+
+  <!-- Falling Petals Canvas -->
+  <canvas id="petals-canvas"></canvas>
+
+  <!-- ========================================== -->
+  <!-- 1. ENVELOPE OPENING OVERLAY (MỞ BÌ THƯ)      -->
+  <!-- Khi khách nhấn mở, nhạc sẽ phát tự động    -->
+  <!-- ========================================== -->
+  <div id="envelope-overlay" class="envelope-overlay fixed inset-0 z-50 flex items-center justify-center bg-stone-900/70 backdrop-blur-md p-4">
+    <div class="relative w-full max-w-md bg-[#fffdfa] rounded-3xl p-8 sm:p-10 shadow-2xl text-center border border-amber-100/60 transform transition-all animate-float-slow">
+      <!-- Decorative floral ribbon icon -->
+      <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-rosewood-light flex items-center justify-center text-rosewood shadow-inner">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+        </svg>
+      </div>
+
+      <p class="text-xs uppercase tracking-[0.3em] text-champagne font-semibold mb-2">WEDDING INVITATION</p>
+      <h2 class="font-script text-4xl sm:text-5xl text-rosewood-dark my-2" id="env-couple-name">Duy Nam & Mai Tâm</h2>
+      <p class="font-garamond italic text-stone-500 text-lg mb-6">Trân trọng kính mời bạn đến chung vui cùng chúng mình!</p>
+
+      <!-- Wax Seal Button to Open -->
+      <button id="btn-open-envelope" class="group relative inline-flex items-center gap-3 px-8 py-3.5 rounded-full bg-gradient-to-r from-rosewood to-rosewood-dark text-white font-medium shadow-lg hover:shadow-rosewood/30 hover:scale-105 active:scale-95 transition-all duration-300">
+        <span>Mở Thiệp Cưới</span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+        </svg>
+      </button>
+
+      <p class="text-[11px] text-stone-400 mt-4 italic flex items-center justify-center gap-1">
+        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"/></svg>
+        Bấm mở thiệp để bật nhạc nền lãng mạn
+      </p>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 2. FLOATING MUSIC DISC & AUDIO CONTROLS   -->
+  <!-- ========================================== -->
+  <div class="fixed top-5 right-5 z-40 flex items-center gap-3">
+    <!-- Music Info Pill -->
+    <div id="music-tooltip" class="hidden sm:flex items-center gap-2 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full border border-rosewood/20 shadow-md text-xs text-stone-600">
+      <div class="sound-wave flex items-center gap-0.5">
+        <span></span><span></span><span></span><span></span>
+      </div>
+      <span id="music-title-display" class="max-w-[140px] truncate">Canon in D</span>
+    </div>
+
+    <!-- Vinyl Disc Button -->
+    <button id="btn-toggle-music" title="Bật/Tắt nhạc" class="relative w-12 h-12 rounded-full bg-stone-900 border-2 border-champagne text-white shadow-xl flex items-center justify-center hover:scale-110 active:scale-95 transition-transform duration-200">
+      <!-- Vinyl record grooved icon -->
+      <div id="music-disc-icon" class="music-disc w-full h-full rounded-full flex items-center justify-center">
+        <div class="w-4 h-4 rounded-full bg-rosewood flex items-center justify-center border-2 border-stone-800">
+          <div class="w-1.5 h-1.5 rounded-full bg-white"></div>
+        </div>
+      </div>
+      <!-- Music pause overlay if paused -->
+      <div id="music-pause-icon" class="absolute inset-0 bg-stone-900/60 rounded-full flex items-center justify-center text-white hidden">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      </div>
+    </button>
+  </div>
+
+  <audio id="bg-audio" loop preload="auto">
+    <source id="audio-source" src="" type="audio/ogg">
+  </audio>
+
+  <!-- ========================================== -->
+  <!-- 3. HERO / COVER SECTION                    -->
+  <!-- ========================================== -->
+  <header class="relative min-h-[92vh] flex flex-col items-center justify-center text-center px-4 pt-12 pb-16 overflow-hidden hero-glow">
+    <!-- Top floral ornament -->
+    <div class="mb-4 text-champagne opacity-80">
+      <svg class="w-24 h-8 mx-auto" viewBox="0 0 100 25" fill="currentColor">
+        <path d="M50 0 C40 10, 20 12, 0 12 C20 12, 40 15, 50 25 C60 15, 80 12, 100 12 C80 12, 60 10, 50 0 Z" opacity="0.6"/>
+        <circle cx="50" cy="12" r="2.5"/>
+      </svg>
+    </div>
+
+    <span class="text-xs sm:text-sm uppercase tracking-[0.35em] text-stone-500 font-medium mb-3">SAVE OUR DATE</span>
+    
+    <!-- Bride & Groom Main Typography -->
+    <h1 class="font-script text-6xl sm:text-7xl md:text-8xl text-rosewood-dark my-2 leading-tight">
+      <span id="hero-groom-name">Duy Nam</span>
+      <span class="text-champagne font-garamond italic text-4xl sm:text-5xl block sm:inline my-1 sm:my-0">&</span>
+      <span id="hero-bride-name">Mai Tâm</span>
+    </h1>
+
+    <div class="h-0.5 w-16 bg-champagne mx-auto my-4 opacity-50"></div>
+
+    <p class="font-serif-title text-lg sm:text-xl text-stone-700 tracking-wide mb-6" id="hero-date-display">
+      14 . 11 . 2026
+    </p>
+
+    <!-- Romantic Quote -->
+    <p class="font-garamond italic text-base sm:text-xl text-stone-500 max-w-xl mx-auto px-4 mb-10 leading-relaxed" id="hero-quote">
+      “Hạnh phúc không phải là điểm đến, mà là một hành trình chúng mình chọn đi cùng nhau mãi mãi.”
+    </p>
+
+    <!-- LIVE COUNTDOWN TIMER -->
+    <div class="w-full max-w-lg mx-auto">
+      <div class="text-xs uppercase tracking-widest text-champagne font-semibold mb-3">ĐẾM NGƯỢC NGÀY VỀ CHUNG ĐÔI</div>
+      <div class="grid grid-cols-4 gap-2 sm:gap-4 px-2">
+        <!-- Days -->
+        <div class="glass-card rounded-2xl p-3 sm:p-4 text-center shadow-sm border border-stone-200/60">
+          <span id="timer-days" class="font-serif-title text-2xl sm:text-4xl font-bold text-rosewood-dark block">00</span>
+          <span class="text-[10px] sm:text-xs text-stone-500 uppercase tracking-wider">Ngày</span>
+        </div>
+        <!-- Hours -->
+        <div class="glass-card rounded-2xl p-3 sm:p-4 text-center shadow-sm border border-stone-200/60">
+          <span id="timer-hours" class="font-serif-title text-2xl sm:text-4xl font-bold text-rosewood-dark block">00</span>
+          <span class="text-[10px] sm:text-xs text-stone-500 uppercase tracking-wider">Giờ</span>
+        </div>
+        <!-- Minutes -->
+        <div class="glass-card rounded-2xl p-3 sm:p-4 text-center shadow-sm border border-stone-200/60">
+          <span id="timer-minutes" class="font-serif-title text-2xl sm:text-4xl font-bold text-rosewood-dark block">00</span>
+          <span class="text-[10px] sm:text-xs text-stone-500 uppercase tracking-wider">Phút</span>
+        </div>
+        <!-- Seconds -->
+        <div class="glass-card rounded-2xl p-3 sm:p-4 text-center shadow-sm border border-stone-200/60">
+          <span id="timer-seconds" class="font-serif-title text-2xl sm:text-4xl font-bold text-rosewood-dark block">00</span>
+          <span class="text-[10px] sm:text-xs text-stone-500 uppercase tracking-wider">Giây</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll Down Indicator -->
+    <a href="#couple" class="mt-12 text-stone-400 hover:text-rosewood transition-colors animate-bounce">
+      <svg class="w-6 h-6 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+      </svg>
+    </a>
+  </header>
+
+  <!-- ========================================== -->
+  <!-- 4. BRIDE & GROOM SECTION (CÔ DÂU & CHÚ RỂ) -->
+  <!-- ========================================== -->
+  <section id="couple" class="py-16 sm:py-24 px-4 max-w-5xl mx-auto">
+    <div class="text-center mb-14">
+      <span class="text-xs uppercase tracking-[0.3em] text-champagne font-semibold">ABOUT US</span>
+      <h2 class="font-serif-title text-3xl sm:text-4xl text-stone-800 mt-2">Cô Dâu & Chú Rể</h2>
+      <div class="h-0.5 w-12 bg-champagne mx-auto mt-3"></div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-14 items-center">
+      <!-- Chú Rể (Groom) Card -->
+      <div class="glass-card rounded-3xl p-6 sm:p-8 text-center border border-rosewood/15 hover:shadow-xl transition-shadow duration-300">
+        <div class="arch-frame max-w-[240px] h-[320px] mx-auto mb-6 bg-stone-100 border-4 border-white shadow-md relative">
+          <img id="groom-avatar" src="" alt="Chú Rể Duy Nam" class="w-full h-full object-cover" style="object-position: center 15%;" onerror="this.onerror=null; this.src=WEDDING_CONFIG.groom.avatarFallback;">
+        </div>
+        <div class="flex items-center justify-center gap-2 mb-2">
+          <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold tracking-wider text-rosewood-dark bg-rosewood-light">CHÚ RỂ</span>
+          <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold tracking-wider text-amber-800 bg-amber-50 border border-amber-200/60 font-semibold" id="groom-role">TRƯỞNG NAM</span>
+        </div>
+        <h3 id="groom-name" class="font-serif-title text-2xl sm:text-3xl font-semibold text-stone-800 mb-2">Duy Nam</h3>
+        <p id="groom-desc" class="text-sm text-stone-600 italic font-garamond text-base mb-4 leading-relaxed">
+          Chàng trai luôn mỉm cười và hứa sẽ là chỗ dựa vững chãi nhất cho người con gái anh yêu.
+        </p>
+
+        <!-- Parents info -->
+        <div class="text-xs text-stone-600 border-t border-stone-200/70 pt-4 mb-5 space-y-1.5 text-left bg-stone-50/70 p-3.5 rounded-2xl">
+          <p class="flex justify-between"><span>Ông:</span> <strong id="groom-father" class="text-stone-800 font-semibold">Trần Minh Quang</strong></p>
+          <p class="flex justify-between"><span>Bà:</span> <strong id="groom-mother" class="text-stone-800 font-semibold">Phan Thị Thiền</strong></p>
+          <p class="pt-1.5 text-[11px] text-stone-500 border-t border-stone-200/60 flex items-start gap-1">
+            <svg class="w-3.5 h-3.5 text-rosewood shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
+            <span id="groom-address">638/26/11 Lê Trọng Tấn, P. Bình Hưng Hòa, Q. Bình Tân</span>
+          </p>
+        </div>
+
+        <a id="groom-phone-link" href="#" class="inline-flex items-center gap-2 text-xs font-medium text-stone-600 hover:text-rosewood transition-colors">
+          <svg class="w-4 h-4 text-rosewood" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+          <span id="groom-phone">0901 234 567</span>
+        </a>
+      </div>
+
+      <!-- Cô Dâu (Bride) Card -->
+      <div class="glass-card rounded-3xl p-6 sm:p-8 text-center border border-rosewood/15 hover:shadow-xl transition-shadow duration-300">
+        <div class="arch-frame max-w-[240px] h-[320px] mx-auto mb-6 bg-stone-100 border-4 border-white shadow-md relative">
+          <img id="bride-avatar" src="" alt="Cô Dâu Teresa Mai Tâm" class="w-full h-full object-cover" style="object-position: center 15%;" onerror="this.onerror=null; this.src=WEDDING_CONFIG.bride.avatarFallback;">
+        </div>
+        <div class="flex items-center justify-center gap-2 mb-2">
+          <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold tracking-wider text-rosewood-dark bg-rosewood-light">CÔ DÂU</span>
+          <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold tracking-wider text-amber-800 bg-amber-50 border border-amber-200/60 font-semibold" id="bride-role">ÚT NỮ</span>
+        </div>
+        <h3 id="bride-name" class="font-serif-title text-2xl sm:text-3xl font-semibold text-stone-800 mb-2">Teresa Trần Thanh Mai Tâm</h3>
+        <p id="bride-desc" class="text-sm text-stone-600 italic font-garamond text-base mb-4 leading-relaxed">
+          Cô gái luôn tràn đầy năng lượng tích cực, người mang lại sự bình yên và hạnh phúc cho gia đình nhỏ.
+        </p>
+
+        <!-- Parents info -->
+        <div class="text-xs text-stone-600 border-t border-stone-200/70 pt-4 mb-5 space-y-1.5 text-left bg-stone-50/70 p-3.5 rounded-2xl">
+          <p class="flex justify-between"><span>Ông:</span> <strong id="bride-father" class="text-stone-800 font-semibold">Giuse Trần Quốc Đệ</strong></p>
+          <p class="flex justify-between"><span>Bà:</span> <strong id="bride-mother" class="text-stone-800 font-semibold">Maria Nguyễn Thị Hảo</strong></p>
+          <p class="pt-1.5 text-[11px] text-stone-500 border-t border-stone-200/60 flex items-start gap-1">
+            <svg class="w-3.5 h-3.5 text-rosewood shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
+            <span id="bride-address">65/3F Hậu Lân, Xã Bà Điểm, Hóc Môn</span>
+          </p>
+        </div>
+
+        <a id="bride-phone-link" href="#" class="inline-flex items-center gap-2 text-xs font-medium text-stone-600 hover:text-rosewood transition-colors">
+          <svg class="w-4 h-4 text-rosewood" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+          <span id="bride-phone">0912 345 678</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- 5. EVENTS SCHEDULE & MAPS (LỊCH TRÌNH)      -->
+  <!-- ========================================== -->
+  <section id="events" class="py-16 sm:py-24 px-4 bg-stone-100/50">
+    <div class="max-w-5xl mx-auto">
+      <div class="text-center mb-14">
+        <span class="text-xs uppercase tracking-[0.3em] text-champagne font-semibold">ITINERARY & VENUE</span>
+        <h2 class="font-serif-title text-3xl sm:text-4xl text-stone-800 mt-2">Sự Kiện & Lễ Cưới</h2>
+        <div class="h-0.5 w-12 bg-champagne mx-auto mt-3"></div>
+      </div>
+
+      <div id="events-container" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Event cards are rendered dynamically from config.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- 6. PHOTO GALLERY & LIGHTBOX (ALBUM ẢNH)    -->
+  <!-- ========================================== -->
+  <section id="gallery" class="py-16 sm:py-24 px-4 max-w-6xl mx-auto">
+    <div class="text-center mb-14">
+      <span class="text-xs uppercase tracking-[0.3em] text-champagne font-semibold">MEMORIES</span>
+      <h2 class="font-serif-title text-3xl sm:text-4xl text-stone-800 mt-2">Khoảnh Khắc Hạnh Phúc</h2>
+      <div class="h-0.5 w-12 bg-champagne mx-auto mt-3"></div>
+      <p class="text-xs sm:text-sm text-stone-500 mt-3 font-garamond italic text-base">Bấm vào từng bức ảnh để xem phóng to rõ nét</p>
+    </div>
+
+    <!-- Gallery Grid -->
+    <div id="gallery-grid" class="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-5">
+      <!-- Photos are rendered dynamically from config.js -->
+    </div>
+  </section>
+
+  <!-- LIGHTBOX MODAL (XEM ẢNH FULLSCREEN) -->
+  <div id="lightbox-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <!-- Close button -->
+    <button id="lightbox-close" class="absolute top-5 right-5 text-white/80 hover:text-white p-2 rounded-full bg-white/10 hover:bg-white/20 transition-all z-10">
+      <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+
+    <!-- Prev button -->
+    <button id="lightbox-prev" class="absolute left-4 top-1/2 -translate-y-1/2 text-white/80 hover:text-white p-3 rounded-full bg-white/10 hover:bg-white/20 transition-all z-10">
+      <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+    </button>
+
+    <!-- Next button -->
+    <button id="lightbox-next" class="absolute right-4 top-1/2 -translate-y-1/2 text-white/80 hover:text-white p-3 rounded-full bg-white/10 hover:bg-white/20 transition-all z-10">
+      <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+    </button>
+
+    <!-- Image & Caption Container -->
+    <div class="max-w-4xl max-h-[85vh] flex flex-col items-center justify-center">
+      <img id="lightbox-img" src="" alt="Album Cưới" class="max-w-full max-h-[75vh] object-contain rounded-xl shadow-2xl">
+      <p id="lightbox-caption" class="text-stone-300 text-sm mt-3 text-center font-garamond italic text-lg px-4"></p>
+      <span id="lightbox-counter" class="text-xs text-stone-400 mt-1">1 / 6</span>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 7. GUESTBOOK / RSVP (SỔ LƯU BÚT & LỜI CHÚC) -->
+  <!-- ========================================== -->
+  <section id="wishes" class="py-16 sm:py-24 px-4 max-w-4xl mx-auto">
+    <div class="text-center mb-12">
+      <span class="text-xs uppercase tracking-[0.3em] text-champagne font-semibold">GUESTBOOK</span>
+      <h2 class="font-serif-title text-3xl sm:text-4xl text-stone-800 mt-2">Sổ Lưu Bút & Lời Chúc</h2>
+      <div class="h-0.5 w-12 bg-champagne mx-auto mt-3"></div>
+      <p class="text-sm text-stone-500 mt-3 font-garamond italic text-base">Hãy để lại những lời chúc thân thương nhất dành tặng đôi tân lang & tân nương nhé!</p>
+    </div>
+
+    <!-- Form gửi lời chúc -->
+    <div class="glass-card rounded-3xl p-6 sm:p-8 shadow-md border border-stone-200/60 mb-12">
+      <form id="form-wish" class="space-y-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-stone-700 uppercase tracking-wider mb-1.5">Tên của bạn *</label>
+            <input type="text" id="guest-name" required placeholder="Ví dụ: Hoàng Nam & Bạn gái" class="w-full px-4 py-3 rounded-xl border border-stone-200 focus:outline-none focus:ring-2 focus:ring-rosewood/40 text-sm bg-white">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-stone-700 uppercase tracking-wider mb-1.5">Mối quan hệ</label>
+            <select id="guest-relation" class="w-full px-4 py-3 rounded-xl border border-stone-200 focus:outline-none focus:ring-2 focus:ring-rosewood/40 text-sm bg-white text-stone-700">
+              <option value="Bạn của Chú Rể">Bạn của Chú Rể Duy Nam</option>
+              <option value="Bạn của Cô Dâu">Bạn của Cô Dâu Mai Tâm</option>
+              <option value="Đồng nghiệp">Đồng nghiệp</option>
+              <option value="Người thân / Họ hàng">Người thân / Họ hàng</option>
+              <option value="Khách quý">Khách quý</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-stone-700 uppercase tracking-wider mb-1.5">Lời chúc mừng của bạn *</label>
+          <textarea id="guest-message" rows="3" required placeholder="Chúc hai bạn trăm năm hạnh phúc, mãi mãi mỉm cười như ngày hôm nay nhé..." class="w-full px-4 py-3 rounded-xl border border-stone-200 focus:outline-none focus:ring-2 focus:ring-rosewood/40 text-sm bg-white"></textarea>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-stone-700 uppercase tracking-wider mb-2">Bạn sẽ tham dự chứ?</label>
+          <div class="flex flex-wrap gap-4 text-sm text-stone-700">
+            <label class="inline-flex items-center gap-2 cursor-pointer">
+              <input type="radio" name="attendance" value="Sẽ tham dự" checked class="text-rosewood focus:ring-rosewood">
+              <span>Chắc chắn sẽ đến tham dự 🎉</span>
+            </label>
+            <label class="inline-flex items-center gap-2 cursor-pointer">
+              <input type="radio" name="attendance" value="Rất tiếc không thể đến" class="text-rosewood focus:ring-rosewood">
+              <span>Rất tiếc không thể đến nhưng gửi lời chúc ❤️</span>
+            </label>
+          </div>
+        </div>
+
+        <button type="submit" class="w-full sm:w-auto px-8 py-3.5 rounded-full bg-gradient-to-r from-rosewood to-rosewood-dark text-white font-medium text-sm shadow-md hover:shadow-rosewood/30 hover:scale-[1.02] active:scale-95 transition-all">
+          Gửi Lời Chúc Phúc ✨
+        </button>
+      </form>
+    </div>
+
+    <!-- Danh sách lời chúc hiển thị -->
+    <div class="space-y-4" id="wishes-list">
+      <!-- Dynamic list from LocalStorage & sample data -->
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- 8. FOOTER (LỜI CẢM ƠN)                     -->
+  <!-- ========================================== -->
+  <footer class="text-center py-12 px-4 border-t border-stone-200/60 bg-white/60">
+    <div class="max-w-md mx-auto">
+      <h3 class="font-script text-4xl text-rosewood-dark mb-2">Thank You</h3>
+      <p id="footer-thank-you" class="font-garamond italic text-base text-stone-600 mb-4">
+        Sự hiện diện và lời chúc phúc của quý khách là niềm vinh dự và món quà ý nghĩa nhất đối với gia đình chúng mình!
+      </p>
+      <div class="h-0.5 w-12 bg-champagne mx-auto my-4 opacity-60"></div>
+      <p class="text-xs text-stone-400">
+        Forever Together &bull; Duy Nam & Mai Tâm &bull; 2026
+      </p>
+    </div>
+  </footer>
+
+  <!-- ========================================== -->
+  <!-- 9. STICKY BOTTOM NAV BAR (FOR MOBILE)      -->
+  <!-- ========================================== -->
+  <nav class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-stone-200 py-2.5 px-4 flex justify-around items-center shadow-lg text-stone-600 text-xs">
+    <a href="#" class="flex flex-col items-center gap-0.5 hover:text-rosewood">
+      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+      <span>Trang Đầu</span>
+    </a>
+    <a href="#events" class="flex flex-col items-center gap-0.5 hover:text-rosewood">
+      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+      <span>Lịch Trình</span>
+    </a>
+    <a href="#gallery" class="flex flex-col items-center gap-0.5 hover:text-rosewood">
+      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+      <span>Album Ảnh</span>
+    </a>
+    <a href="#wishes" class="flex flex-col items-center gap-0.5 hover:text-rosewood">
+      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/></svg>
+      <span>Lời Chúc</span>
+    </a>
+  </nav>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toast">Thông báo</div>
+
+  <!-- Scripts -->
+  <script src="config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,197 @@
+/* ========================================================
+   THIỆP CƯỚI ONLINE - CUSTOM STYLES & ANIMATIONS
+   Tone màu: Pastel Romantic (Hồng phấn, Vàng nhạt, Sage Green, Trắng kem)
+   ======================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --color-primary: #d9777f;       /* Rose dust / Hồng đất dịu */
+  --color-primary-dark: #b85d65;
+  --color-primary-light: #fbeee8; /* Cream blush */
+  --color-gold: #c5a059;          /* Champagne gold */
+  --color-gold-light: #f5eedc;
+  --color-sage: #8a9a86;          /* Sage green */
+  --color-text: #2c2523;
+  --color-text-muted: #6e6561;
+  --color-bg: #fdfbf7;           /* Warm soft ivory */
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+/* Font classes */
+.font-serif-title {
+  font-family: 'Playfair Display', serif;
+}
+
+.font-garamond {
+  font-family: 'Cormorant Garamond', serif;
+}
+
+.font-script {
+  font-family: 'Alex Brush', cursive;
+}
+
+/* Background grain & floral gradients */
+.bg-wedding-pattern {
+  background-color: #faf6f0;
+  background-image: radial-gradient(rgba(217, 119, 127, 0.08) 1px, transparent 1px), radial-gradient(rgba(197, 160, 89, 0.08) 1px, #faf6f0 1px);
+  background-size: 40px 40px;
+  background-position: 0 0, 20px 20px;
+}
+
+/* Floating Petals Canvas */
+#petals-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 40;
+}
+
+/* Spinning Vinyl Music Player */
+.music-disc {
+  transition: transform 0.3s ease;
+}
+
+.music-disc.playing {
+  animation: spin 8s linear infinite;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Sound wave animation */
+.sound-wave span {
+  display: inline-block;
+  width: 3px;
+  height: 10px;
+  background-color: var(--color-primary);
+  border-radius: 3px;
+  animation: wave 1.2s ease-in-out infinite;
+}
+
+.sound-wave span:nth-child(2) {
+  animation-delay: 0.2s;
+  height: 16px;
+}
+
+.sound-wave span:nth-child(3) {
+  animation-delay: 0.4s;
+  height: 8px;
+}
+
+.sound-wave span:nth-child(4) {
+  animation-delay: 0.1s;
+  height: 14px;
+}
+
+@keyframes wave {
+  0%, 100% {
+    transform: scaleY(0.4);
+  }
+  50% {
+    transform: scaleY(1.4);
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #fdfbf7;
+}
+::-webkit-scrollbar-thumb {
+  background: #e2c7c2;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary);
+}
+
+/* Arch Card Style for Wedding Photos */
+.arch-frame {
+  border-radius: 160px 160px 16px 16px;
+  overflow: hidden;
+  box-shadow: 0 20px 35px -10px rgba(184, 93, 101, 0.2);
+}
+
+/* Gold Gradient Border */
+.border-gold-gradient {
+  border-image: linear-gradient(135deg, #d4af37, #f7e2a9, #b99335) 1;
+}
+
+/* Glassmorphism */
+.glass-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+}
+
+/* Hero Parallax Glow */
+.hero-glow {
+  background: radial-gradient(circle, rgba(251, 238, 232, 0.8) 0%, rgba(253, 251, 247, 0) 70%);
+}
+
+/* Floating animation */
+.animate-float-slow {
+  animation: floatSlow 6s ease-in-out infinite alternate;
+}
+
+@keyframes floatSlow {
+  0% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  100% {
+    transform: translateY(-8px) rotate(1deg);
+  }
+}
+
+/* Toast message notification */
+#toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: rgba(30, 26, 25, 0.92);
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 9999px;
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+  z-index: 100;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 0;
+  pointer-events: none;
+}
+
+#toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Envelope Opening Invitation Modal */
+.envelope-overlay {
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+
+.envelope-overlay.hide {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
