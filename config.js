@@ -37,8 +37,8 @@ const WEDDING_CONFIG = {
     description: "Cô gái luôn tràn đầy năng lượng tích cực, người mang lại sự bình yên và hạnh phúc cho gia đình nhỏ."
   },
 
-  // Thời gian đếm ngược ngày cưới chính thức (Lễ Thành Hôn: 14/11/2026)
-  weddingDate: "2026-11-14T11:00:00",
+  // Thời gian đếm ngược ngày cưới chính thức (Tiệc Cưới: 14/11/2026 lúc 19:00)
+  weddingDate: "2026-11-14T19:00:00",
   weddingDateFormatted: "Thứ Bảy, 14 Tháng 11, 2026",
 
   // Danh sách các sự kiện (Lễ Nhà Thờ, Lễ Vu Quy, Tiệc Thành Hôn)
@@ -83,7 +83,7 @@ const WEDDING_CONFIG = {
       id: "thanh-hon",
       tag: "TIỆC CƯỚI CHÍNH",
       title: "LỄ THÀNH HÔN & TIỆC CƯỚI",
-      time: "11:30",
+      time: "19:00",
       date: "14.11.2026",
       lunarDate: "(Thứ Bảy, ngày 06 tháng 10 năm Bính Ngọ)",
       locationName: "Trung Tâm Tiệc Cưới Đông Phương",
@@ -91,8 +91,8 @@ const WEDDING_CONFIG = {
       mapUrl: "https://maps.google.com/?q=Nha+Hang+Dong+Phuong+Nguyen+Van+Qua+District+12",
       calendarLink: {
         title: "Tiệc Cưới Duy Nam & Teresa Mai Tâm",
-        start: "20261114T113000",
-        end: "20261114T143000",
+        start: "20261114T190000",
+        end: "20261114T213000",
         location: "Trung Tâm Tiệc Cưới Đông Phương, Đường Nguyễn Văn Quá, Quận 12, TP. HCM",
         details: "Trân trọng kính mời quý khách tham dự bữa tiệc rượu chung vui cùng hai bên gia đình!"
       }
